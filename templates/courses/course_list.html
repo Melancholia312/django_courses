@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block nav %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    {% if user.is_authenticated %}
+    <p>
+      <a >{{ user.username }}</a> | <a href="{% url 'account_logout' %}">Выйти</a>
+    </p>
+    {% else %}
+    <p>
+      <a href="{% url 'account_login' %}">Войти</a> | <a href="{% url 'account_signup' %}">Регистрация</a>
+    </p>
+    {% endif %}
+    </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<main>
+
+  <div class="album py-5 bg-light">
+
+    <div class="container">
+
+    <form class="d-flex" action="{% url 'course_search' %}" method="get">
+        <input class="form-control me-2" type="search" name="q"
+               {% if search_q %}
+               value="{{ search_q }}"
+               {% endif %}
+               placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      <br>
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        <form action="{% url 'course_filter' %}" method="get">
+          <h3>Categories</h3>
+        <ul class="list-group">
+          {% for category in view.get_categories %}
+          <li class="list-group-item">
+            <input class="form-check-input me-1" type="checkbox" value="{{ category.id }}" name="category"
+            {% if category.id in categories_q %}
+                    checked
+            {% endif %}>
+            {{ category.name }}
+          </li>
+          {% endfor %}
+        </ul>
+
+          <br>
+  <input type="radio" class="btn-check" name="order_by" value="date" id="btnradio1" autocomplete="off"
+  {% if 'date' in order_q %}
+                    checked
+  {% endif %}>
+  <label class="btn btn-outline-primary" for="btnradio1">Order by date</label>
+          <br>
+  <input type="radio" class="btn-check" name="order_by" value="students" id="btnradio2" autocomplete="off"
+  {% if 'students' in order_q %}
+                    checked
+  {% endif %}>
+  <label class="btn btn-outline-primary" for="btnradio2">Order by count of students</label>
+          <br>
+  <input type="radio" class="btn-check" name="order_by" value="rating" id="btnradio3" autocomplete="off"
+  {% if 'rating' in order_q %}
+                    checked
+  {% endif %}>
+  <label class="btn btn-outline-primary" for="btnradio3">Order by rating</label>
+          <br>
+          <br>
+          <button type="submit">Find</button>
+        </form>
+        {% for course in courses %}
+          <div class="col">
+          <div class="card shadow-sm">
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/></svg>
+
+            <div class="card-body">
+              <h2>{{ course.name }}</h2>
+              <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+              <p>
+                {% if course.avg_rating %}
+                Rating: {{ course.avg_rating }} |
+                {% endif %} Students: {{ course.students_count }} | Reviews: {{ course.reviews_count }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{{ course.get_absolute_url }}"><button type="button" class="btn btn-sm btn-outline-secondary">View</button></a>
+                </div>
+                <small class="text-muted">{{ course.created_at|date:'d M/Y' }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+</main>
+{% endblock %}

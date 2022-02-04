@@ -1,11 +1,6 @@
 from django.contrib import admin
-from .models import Category, Course, UserCourse, Rating, RatingStar, Reviews
+from .models import Course, Category, UserCourse
 
-
-admin.site.register(RatingStar)
-admin.site.register(Category)
 admin.site.register(Course)
+admin.site.register(Category)
 admin.site.register(UserCourse)
-admin.site.register(Rating)
-admin.site.register(Reviews)
-
