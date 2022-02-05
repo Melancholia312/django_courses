@@ -46,6 +46,7 @@
         <ul class="list-group">
           {% for category in view.get_categories %}
           <li class="list-group-item">
+            <span class="badge bg-primary rounded-pill">{{ category.courses_count }}</span>
             <input class="form-check-input me-1" type="checkbox" value="{{ category.id }}" name="category"
             {% if category.id in categories_q %}
                     checked
@@ -55,12 +56,6 @@
           {% endfor %}
         </ul>
 
-          <br>
-  <input type="radio" class="btn-check" name="order_by" value="date" id="btnradio1" autocomplete="off"
-  {% if 'date' in order_q %}
-                    checked
-  {% endif %}>
-  <label class="btn btn-outline-primary" for="btnradio1">Order by date</label>
           <br>
   <input type="radio" class="btn-check" name="order_by" value="students" id="btnradio2" autocomplete="off"
   {% if 'students' in order_q %}
