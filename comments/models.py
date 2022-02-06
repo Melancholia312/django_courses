@@ -20,6 +20,9 @@ class Comment(MPTTModel):
     )
     text = models.TextField(max_length=1024)
 
+    def likes_count(self):
+        return self.likes.count()
+
     def __str__(self):
         return f'review from {self.user} to {self.course.name}'
 

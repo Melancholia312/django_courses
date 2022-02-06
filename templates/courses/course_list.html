@@ -1,28 +1,5 @@
 {% extends 'base.html' %}
 
-{% block nav %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'home' %}">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-
-    {% if user.is_authenticated %}
-    <p>
-      <a >{{ user.username }}</a> | <a href="{% url 'account_logout' %}">Выйти</a>
-    </p>
-    {% else %}
-    <p>
-      <a href="{% url 'account_login' %}">Войти</a> | <a href="{% url 'account_signup' %}">Регистрация</a>
-    </p>
-    {% endif %}
-    </div>
-    </div>
-</nav>
-{% endblock %}
-
 {% block content %}
 <main>
 

@@ -1,5 +1,5 @@
 from .forms import CommentForm
-from .models import Comment
+from .models import Comment, Like
 from django.shortcuts import redirect
 from courses.models import Course
 from django import views
@@ -36,3 +36,14 @@ class CommentDelete(DeleteView):
 
     def get_success_url(self):
         return reverse_lazy('course_detail', args=[self.object.course_id])
+
+
+class LikeComment(views.View):
+
+    def post(self, request, pk):
+        comment = Comment.objects.get(id=pk)
+        try:
+            Like.objects.get(user=request.user, comment=comment).delete()
+        except Like.DoesNotExist:
+            Like.objects.create(comment=comment, user=request.user)
+        return redirect(comment.course.get_absolute_url())

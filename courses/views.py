@@ -103,3 +103,13 @@ class CourseSignUp(views.View):
         else:
             return redirect('login')
 
+
+class UsesCoursesView(views.generic.ListView):
+
+    model = Course
+    template_name = 'courses/user_course_list.html'
+    context_object_name = 'courses'
+
+    def get_queryset(self):
+        queryset = UserCourse.objects.filter(user=self.request.user)
+        return queryset

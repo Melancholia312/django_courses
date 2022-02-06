@@ -51,6 +51,12 @@
                 {% endif %}
             </p>
             <p>Text: {{ node.text }}</p>
+
+            <form action="{% url 'like_comment' node.id %}" method="post">
+                {% csrf_token %}
+            <button type="submit" class="btn btn-secondary">Like {{ node.likes_count }}</button>
+            </form>
+
             <form action="{% url 'add_comment' course.id %}" method="post" class="mt-4"
                           id="formReview">
                         {% csrf_token %}
