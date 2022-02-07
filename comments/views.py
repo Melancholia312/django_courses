@@ -6,9 +6,11 @@ from django import views
 from django.views.generic.edit import DeleteView
 from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from courses.permissions import AuthorPermissionMixin
 
 
-class AddComment(views.View):
+class AddComment(LoginRequiredMixin, views.View):
 
     def post(self, request, pk):
         form = CommentForm(request.POST)
@@ -23,7 +25,7 @@ class AddComment(views.View):
         return redirect(course.get_absolute_url())
 
 
-class CommentDelete(DeleteView):
+class CommentDelete(AuthorPermissionMixin, DeleteView):
     model = Comment
 
     def get(self, request, *args, **kwargs):
@@ -38,7 +40,7 @@ class CommentDelete(DeleteView):
         return reverse_lazy('course_detail', args=[self.object.course_id])
 
 
-class LikeComment(views.View):
+class LikeComment(LoginRequiredMixin, views.View):
 
     def post(self, request, pk):
         comment = Comment.objects.get(id=pk)

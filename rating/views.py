@@ -2,9 +2,10 @@ from .models import Rating, RatingStar
 from courses.models import Course
 from django import views
 from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AddRating(views.View):
+class AddRating(LoginRequiredMixin, views.View):
 
     def post(self, request, pk):
         star = RatingStar.objects.get(value=request.POST.get('rating'))

@@ -24,7 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('courses.urls')),
     path('', include('comments.urls')),
-    path('', include('rating.urls'))
+    path('', include('rating.urls')),
+    path('', include('course_constructor.urls'))
 ]
 
 if settings.DEBUG:

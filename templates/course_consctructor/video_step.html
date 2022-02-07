@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="main-posts">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-sm-6">
+          <p>{{ video_step.description }}</p>
+        </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <video
+              id="my-video"
+              class="video-js"
+              controls
+              preload="auto"
+              width="1000"
+              height="800"
+              data-setup="{}"
+          >
+            <source src="{% url 'stream' video_step.id %}" type="video/mp4"/>
+            <source src="{% url 'stream' video_step.id %}" type="video/webm"/>
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

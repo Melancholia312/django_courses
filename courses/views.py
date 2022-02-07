@@ -1,9 +1,11 @@
+import requests
 from django import views
 from django.db.models import Count, Avg
 from .models import Course, Category, UserCourse
 from comments.models import Comment
 from rating.models import RatingStar, Rating
 from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class Categories:
@@ -46,7 +48,7 @@ class CourseFilter(Categories, views.generic.ListView):
         if self.request.GET.get('order_by') == 'students':
             queryset = queryset.annotate(cnt=Count('students')).order_by('-cnt')
         elif self.request.GET.get('order_by') == 'rating':
-            queryset = queryset.annotate(avg=Avg('ratings')).order_by('-avg')
+            queryset = queryset.annotate(avg=Avg('ratings__star')).order_by('-avg')
         return queryset
 
     def get_context_data(self, *args, **kwargs):
@@ -83,13 +85,16 @@ class CourseDetail(views.generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = Comment.objects.filter(course=kwargs['object'])
-        context['is_student'] = UserCourse.objects.filter(course=kwargs['object'], user=self.request.user).exists()
         context['rating_stars'] = RatingStar.objects.all()
-        context['user_rating'] = Rating.objects.filter(course=kwargs['object'], user=self.request.user).first()
+        try:
+            context['is_student'] = UserCourse.objects.filter(course=kwargs['object'], user=self.request.user).exists()
+            context['user_rating'] = Rating.objects.filter(course=kwargs['object'], user=self.request.user).first()
+        except TypeError:
+            context['is_student'] = False
         return context
 
 
-class CourseSignUp(views.View):
+class CourseSignUp(LoginRequiredMixin, views.View):
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -104,7 +109,7 @@ class CourseSignUp(views.View):
             return redirect('login')
 
 
-class UsesCoursesView(views.generic.ListView):
+class UserCoursesView(LoginRequiredMixin, views.generic.ListView):
 
     model = Course
     template_name = 'courses/user_course_list.html'

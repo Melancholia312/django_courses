@@ -1,9 +1,9 @@
 from django.urls import path
-from .views import CourseDetail, CourseList, Index, CourseFilter, CourseSearch, CourseSignUp, UsesCoursesView
+from .views import CourseDetail, CourseList, Index, CourseFilter, CourseSearch, CourseSignUp, UserCoursesView
 
 urlpatterns = [
     path('', Index.as_view(), name='home'),
-    path('my_courses/', UsesCoursesView.as_view(), name='user_courses_view'),
+    path('my_courses/', UserCoursesView.as_view(), name='user_courses_view'),
     path('courses/', CourseList.as_view(), name='course_list'),
     path('courses/filter/', CourseFilter.as_view(), name='course_filter'),
     path('courses/search/', CourseSearch.as_view(), name='course_search'),
