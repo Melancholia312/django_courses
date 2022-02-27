@@ -28,14 +28,6 @@ class AddComment(LoginRequiredMixin, views.View):
 class CommentDelete(AuthorPermissionMixin, DeleteView):
     model = Comment
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        user = self.object.user
-        if user == request.user:
-            return super().get(request, *args, **kwargs)
-        else:
-            return HttpResponseForbidden()
-
     def get_success_url(self):
         return reverse_lazy('course_detail', args=[self.object.course_id])
 
